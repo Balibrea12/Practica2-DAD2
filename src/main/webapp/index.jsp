@@ -20,11 +20,11 @@
 						
 			a.onclick = function () {
 				$.ajax({
-				    url: '' + id,
+				    url: '/rest/services/asignatura' + X,
 				    type: 'DELETE',
 				    dataType: "json",
 				    success: function(result) {
-				    	document.getElementById(id).remove();
+				    	document.getElementById(X).remove();
 				    },
 			    	error: function(jqXhr, textStatus, errorMessage){
 				    	alert('error');	
@@ -33,9 +33,9 @@
 			};
 	
 			
-			entry.id = id;		
+			entry.id = X;		
 			
-			entry.appendChild(document.createTextNode("("+ id + ") " +name + " " + surname));
+			entry.appendChild(document.createTextNode("("+ X + ") " + Y + " " + Z));
 			 
 			entry.appendChild(a);			
 			
@@ -47,10 +47,10 @@
 			
 			$("#sendButton").click(function(){
 				
-				var sendInfo = {x: $('#x').val()};
+				var sendInfo = {X: $('#X').val(), Y: $('#Y').val()};
 				
 			    $.ajax({
-					    url: '', 
+					    url: '/rest/services/asignatura', 
 					    headers: { 
 				               'Accept': 'application/json',
 				               'Content-Type': 'application/json' 
@@ -58,7 +58,7 @@
 					    type: 'POST',
 					    dataType: "json", 
 					    success: function(result) {
-					    	load(result.x);
+					    	load(result.X, result.Y);
 					    },
 				    	error: function(jqXhr, textStatus, errorMessage){
 					    	alert('Error: ' + jqXhr.responseJSON.resultado);	
@@ -70,12 +70,12 @@
 		
 			
 			$.ajax({
-			    url: '',
+			    url: '/rest/services/asignatura',
 			    type: 'GET',
 			    dataType: "json",
 			    success: function(result) {
-					jQuery.each(result.users, function(i, val) {
-			    		  load(val.x);
+					jQuery.each(result.asignaturas, function(i, val) {
+			    		  load(val.X, val.Y);
 			    		});
 			    }
 			});
@@ -88,8 +88,9 @@
 
 	<center><b>Ejemplo API Rest</b></center><br>
 	Formulario para insertar X<br>
-	X:<input type=text id="X"><br>	
-	<button id="sendButton">Crear</button>
+	X:<input type=text id="X"><br>
+	Y:<input type=text id="Y"><br>
+	<button id="sendButton">Crear Asignatura</button>
 	
 	<br>
 	<br>
