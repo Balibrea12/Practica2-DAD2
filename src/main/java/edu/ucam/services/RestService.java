@@ -9,9 +9,11 @@ import org.json.JSONObject;
 
 import edu.ucam.pojos.Asignatura;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -22,7 +24,7 @@ public class RestService {
 	private static Hashtable<String, Asignatura> asignaturas = new Hashtable<String, Asignatura>();
 	
 	@GET
-	@Path("/asignatura/")
+	@Path("/asignatura")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAsignatura() {
 		
@@ -42,7 +44,7 @@ public class RestService {
 	}
 	
 	@POST
-	@Path("/asignatura/")
+	@Path("/asignatura")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response postAsignatura(InputStream incomingData) {
@@ -81,6 +83,26 @@ public class RestService {
 		}
 		
 		//Si ya existe una asignatura, nos devuelve null
+		return null;
+	}
+	
+	@DELETE
+	@Path("/asignatura/{idAsignatura}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteAsignatura(@PathParam("idAsignatura") String idAsignatura) {
+		
+		System.out.println("Ejecutando deleteAsignatura");
+		JSONObject jsonRespuesta = new JSONObject();
+		
+		if(asignaturas.containsKey(idAsignatura)) {
+			
+			asignaturas.remove(idAsignatura);
+			jsonRespuesta.append("resultado", "Borrado");
+			
+			return Response.ok().entity(jsonRespuesta.toString()).build();
+		}
+		
+		//Si no existe la asignatura con ese no se borraría
 		return null;
 	}
 }

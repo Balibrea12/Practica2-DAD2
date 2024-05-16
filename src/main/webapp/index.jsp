@@ -11,7 +11,7 @@
         
 			var entry = document.createElement('li');
 			
-			var a = document.createElement('a');
+			var a = document.createElement('button');
 			
 			var linkText = document.createTextNode(" [Borrar]");
 			
@@ -23,7 +23,8 @@
 				    type: 'DELETE',
 				    dataType: "json",
 				    success: function(result) {
-				    	document.getElementById(idAsignatura).remove();
+				    	//document.getElementById(idAsignatura).remove();
+				    	document.getElementById(idAsignatura).outerHTML = "";
 				    },
 			    	error: function(jqXhr, textStatus, errorMessage){
 				    	alert('error');	
