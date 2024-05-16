@@ -2,27 +2,27 @@ package edu.ucam.pojos;
 
 public class Asignatura {
 
-	protected String id;
-	protected String nombre;
+	protected String idAsignatura;
+	protected String nombreAsignatura;
 	
-	public Asignatura(String id, String nombre) {
-		this.id = id;
-		this.nombre = nombre;
+	public Asignatura(String idAsignatura, String nombreAsignatura) {
+		this.idAsignatura = idAsignatura;
+		this.nombreAsignatura = nombreAsignatura;
 	}
 
-	public String getId() {
-		return id;
+	public String getIdAsignatura() {
+		return idAsignatura;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setIdAsignatura(String idAsignatura) {
+		this.idAsignatura = idAsignatura;
 	}
 
-	public String getNombre() {
-		return nombre;
+	public String getNombreAsignatura() {
+		return nombreAsignatura;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setNombreAsignatura(String nombreAsignatura) {
+		this.nombreAsignatura = nombreAsignatura;
 	}
 }

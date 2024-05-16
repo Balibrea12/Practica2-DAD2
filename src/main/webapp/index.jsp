@@ -3,28 +3,27 @@
 <head>
 	<meta charset="ISO-8859-1">
 	<title>Probar API REST</title>
-	
-	<!-- Se incluye la librería JQuery que facilita interacturar con el DOM de la web -->
 	<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
 	
 	<script type="text/javascript">
-	 
-		function load(x){
+	
+		function load(idAsignatura, nombreAsignatura){
+        
 			var entry = document.createElement('li');
 			
 			var a = document.createElement('a');
-						
+			
 			var linkText = document.createTextNode(" [Borrar]");
-						
+			
 			a.appendChild(linkText);
-						
+			
 			a.onclick = function () {
 				$.ajax({
-				    url: '/rest/services/asignatura' + X,
+				    url: 'rest/services/asignatura/' + idAsignatura,
 				    type: 'DELETE',
 				    dataType: "json",
 				    success: function(result) {
-				    	document.getElementById(X).remove();
+				    	document.getElementById(idAsignatura).remove();
 				    },
 			    	error: function(jqXhr, textStatus, errorMessage){
 				    	alert('error');	
@@ -32,25 +31,24 @@
 				});
 			};
 	
+			entry.idAsignatura = idAsignatura;
+            
+			entry.appendChild(document.createTextNode("("+ idAsignatura + ") " + nombreAsignatura));
 			
-			entry.id = X;		
+			entry.appendChild(a);
 			
-			entry.appendChild(document.createTextNode("("+ X + ") " + Y + " " + Z));
-			 
-			entry.appendChild(a);			
-			
-			$('#users').append(entry);
+			$('#listadoAsignaturas').append(entry);
 			
 		}
 	
 		$(document).ready(function(){
-			
+        
 			$("#sendButton").click(function(){
-				
-				var sendInfo = {X: $('#X').val(), Y: $('#Y').val()};
+            
+				var sendInfo = {idAsignatura: $('#idAsignatura').val(), nombreAsignatura: $('#nombreAsignatura').val()};
 				
 			    $.ajax({
-					    url: '/rest/services/asignatura', 
+					    url: 'rest/services/asignatura',
 					    headers: { 
 				               'Accept': 'application/json',
 				               'Content-Type': 'application/json' 
@@ -58,7 +56,10 @@
 					    type: 'POST',
 					    dataType: "json", 
 					    success: function(result) {
-					    	load(result.X, result.Y);
+					    	if(result)
+					    		load(result.idAsignatura, result.nombreAsignatura);
+					    	else
+					    		alert("Ya existe una asignatura con ese id");
 					    },
 				    	error: function(jqXhr, textStatus, errorMessage){
 					    	alert('Error: ' + jqXhr.responseJSON.resultado);	
@@ -68,14 +69,13 @@
 					});
 			    });
 		
-			
 			$.ajax({
-			    url: '/rest/services/asignatura',
+			    url: 'rest/services/asignatura',
 			    type: 'GET',
 			    dataType: "json",
 			    success: function(result) {
-					jQuery.each(result.asignaturas, function(i, val) {
-			    		  load(val.X, val.Y);
+			    	jQuery.each(result.asignaturas, function(i, val) {
+			    		  load(val.idAsignatura, val.nombreAsignatura);
 			    		});
 			    }
 			});
@@ -86,16 +86,18 @@
 </head>
 <body>
 
-	<center><b>Ejemplo API Rest</b></center><br>
-	Formulario para insertar X<br>
-	X:<input type=text id="X"><br>
-	Y:<input type=text id="Y"><br>
-	<button id="sendButton">Crear Asignatura</button>
+	<center><b>Ejemplo API Rest</b></center>
+<br>
+	Formulario para insertar<br>
+	ID Asignatura:<input type=text id="idAsignatura"><br>
+	Nombre Asignatura:<input type=text id="nombreAsignatura"><br>
+	<button id="sendButton">Crear</button>
 	
 	<br>
 	<br>
-	Listado de X creados
+	Listado de asignaturas creadas
 	<br>
-	<ul id="X"></ul>
+	<ul id="listadoAsignaturas"></ul>
+
 </body>
 </html>

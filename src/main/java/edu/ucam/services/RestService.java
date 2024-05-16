@@ -22,7 +22,7 @@ public class RestService {
 	private static Hashtable<String, Asignatura> asignaturas = new Hashtable<String, Asignatura>();
 	
 	@GET
-	@Path("/asignatura")
+	@Path("/asignatura/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAsignatura() {
 		
@@ -32,8 +32,8 @@ public class RestService {
 		for (Asignatura asignatura : asignaturas.values()) {
 			
 			JSONObject jsonAsignatura = new JSONObject();
-			jsonAsignatura.put("X", asignatura.getId());
-			jsonAsignatura.put("Y", asignatura.getNombre());
+			jsonAsignatura.put("idAsignatura", asignatura.getIdAsignatura());
+			jsonAsignatura.put("nombreAsignatura", asignatura.getNombreAsignatura());
 			
 			jsonRespuesta.append("asignaturas", jsonAsignatura);
 		}
@@ -42,12 +42,14 @@ public class RestService {
 	}
 	
 	@POST
-	@Path("/asignatura")
+	@Path("/asignatura/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response postAsignatura(InputStream incomingData) {
 		
 		StringBuilder sb = new StringBuilder();
+		System.out.println("Ejecutando postAsignatura");
+		
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(incomingData));
 			String line = null;
@@ -63,17 +65,17 @@ public class RestService {
 		JSONObject jsonRecibido = new JSONObject(sb.toString());
 		
 		//Creamos el objeto Asignatura con los datos que hemos recibido
-		Asignatura asignatura = new Asignatura(jsonRecibido.getString("X"), jsonRecibido.getString("Y"));
+		Asignatura asignatura = new Asignatura(jsonRecibido.getString("idAsignatura"), jsonRecibido.getString("nombreAsignatura"));
 		
 		//Creamos el jsonRespuesta
 		JSONObject jsonRespuesta = new JSONObject();
 		
 		//Añadimos la asignatura a la hashtable
-		if(!asignaturas.containsKey(asignatura.getId())) {
+		if(!asignaturas.containsKey(asignatura.getIdAsignatura())) {
 			
-			asignaturas.put(asignatura.getId(), asignatura);
-			jsonRespuesta.put("X", asignatura.getId());
-			jsonRespuesta.put("Y", asignatura.getNombre());
+			asignaturas.put(asignatura.getIdAsignatura(), asignatura);
+			jsonRespuesta.put("idAsignatura", asignatura.getIdAsignatura());
+			jsonRespuesta.put("nombreAsignatura", asignatura.getNombreAsignatura());
 			
 			return Response.status(200).entity(jsonRespuesta.toString()).build();
 		}
