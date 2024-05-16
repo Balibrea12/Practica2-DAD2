@@ -12,6 +12,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -102,7 +103,50 @@ public class RestService {
 			return Response.ok().entity(jsonRespuesta.toString()).build();
 		}
 		
-		//Si no existe la asignatura con ese no se borraría
+		//Si no existe la asignatura con ese id no se borraría
+		return null;
+	}
+	
+	@PUT
+	@Path("/asignatura")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response putAsignatura(InputStream incomingData) {
+		
+		StringBuilder sb = new StringBuilder();
+		System.out.println("Ejecutando putAsignatura");
+		
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(incomingData));
+			String line = null;
+			
+			while ((line = in.readLine()) != null) {
+				sb.append(line);
+			}
+			
+		} catch (Exception e) {
+			System.out.println("Error Parsing: - ");
+		}
+
+		JSONObject jsonRecibido = new JSONObject(sb.toString());
+		
+		//Creamos el objeto Asignatura con los datos que hemos recibido
+		Asignatura asignatura = new Asignatura(jsonRecibido.getString("idAsignatura"), jsonRecibido.getString("nombreAsignatura"));
+		
+		//Creamos el jsonRespuesta
+		JSONObject jsonRespuesta = new JSONObject();
+		
+		//Añadimos la asignatura a la hashtable
+		if(asignaturas.containsKey(asignatura.getIdAsignatura())) {
+			
+			asignaturas.replace(asignatura.getIdAsignatura(), asignatura);
+			jsonRespuesta.put("idAsignatura", asignatura.getIdAsignatura());
+			jsonRespuesta.put("nombreAsignatura", asignatura.getNombreAsignatura());
+			
+			return Response.status(200).entity(jsonRespuesta.toString()).build();
+		}
+		
+		//Si no existe una asignatura con ese id, nos devuelve null
 		return null;
 	}
 }

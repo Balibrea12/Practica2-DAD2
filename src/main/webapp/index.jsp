@@ -23,7 +23,6 @@
 				    type: 'DELETE',
 				    dataType: "json",
 				    success: function(result) {
-				    	//document.getElementById(idAsignatura).remove();
 				    	document.getElementById(idAsignatura).outerHTML = "";
 				    },
 			    	error: function(jqXhr, textStatus, errorMessage){
@@ -32,7 +31,7 @@
 				});
 			};
 	
-			entry.idAsignatura = idAsignatura;
+			entry.id = idAsignatura;
             
 			entry.appendChild(document.createTextNode("("+ idAsignatura + ") " + nombreAsignatura));
 			
@@ -69,6 +68,34 @@
 					    
 					});
 			    });
+			
+			$("#updateButton").click(function(){
+	            
+				var sendInfo = {idAsignatura: $('#idAsignatura').val(), nombreAsignatura: $('#nombreAsignatura').val()};
+				
+			    $.ajax({
+					    url: 'rest/services/asignatura',
+					    headers: { 
+				               'Accept': 'application/json',
+				               'Content-Type': 'application/json' 
+				           },
+					    type: 'PUT',
+					    dataType: "json", 
+					    success: function(result) {
+					    	if(result) {
+					    		document.getElementById(result.idAsignatura).outerHTML = "";
+					    		load(result.idAsignatura, result.nombreAsignatura);
+					    	}
+					    	else
+					    		alert("No existe una asignatura con ese id");
+					    },
+				    	error: function(jqXhr, textStatus, errorMessage){
+					    	alert('Error: ' + jqXhr.responseJSON.resultado);	
+					    },
+					    data:  JSON.stringify(sendInfo)
+					    
+					});
+			    });
 		
 			$.ajax({
 			    url: 'rest/services/asignatura',
@@ -92,7 +119,8 @@
 	Formulario para insertar<br>
 	ID Asignatura:<input type=text id="idAsignatura"><br>
 	Nombre Asignatura:<input type=text id="nombreAsignatura"><br>
-	<button id="sendButton">Crear</button>
+	<button id="sendButton">Crear Asignatura</button>
+	<button id="updateButton">Modificar Asignatura</button>
 	
 	<br>
 	<br>
