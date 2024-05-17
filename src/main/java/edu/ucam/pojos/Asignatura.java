@@ -4,6 +4,7 @@ public class Asignatura {
 
 	protected String idAsignatura;
 	protected String nombreAsignatura;
+	private Turno turno;
 	
 	public Asignatura(String idAsignatura, String nombreAsignatura) {
 		this.idAsignatura = idAsignatura;
@@ -24,5 +25,13 @@ public class Asignatura {
 
 	public void setNombreAsignatura(String nombreAsignatura) {
 		this.nombreAsignatura = nombreAsignatura;
+	}
+
+	public Turno getTurno() {
+		return turno;
+	}
+
+	public void setTurno(Turno turno) {
+		this.turno = turno;
 	}
 }
