@@ -285,4 +285,59 @@ public class RestService {
 		//Si no existe un turno con ese id, nos devuelve null
 		return null;
 	}
+	
+	//Asignación de Asignatura a Turno
+	@POST
+	@Path("/asignar/")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response AsignaturaAddTurno(InputStream incomingData) {
+		
+		StringBuilder sb = new StringBuilder();
+		System.out.println("Ejecutando AsignaturaAddTurno");
+		
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(incomingData));
+			String line = null;
+			
+			while ((line = in.readLine()) != null) {
+				sb.append(line);
+			}
+			
+		} catch (Exception e) {
+			System.out.println("Error Parsing: - ");
+		}
+
+		JSONObject jsonRecibido = new JSONObject(sb.toString());
+		
+		//Creamos variables de idAsignatura e idTurno
+		String idAsignatura = jsonRecibido.getString("idAsignatura");
+	    String idTurno = jsonRecibido.getString("idTurno");
+		
+		//Creamos el jsonRespuesta
+		JSONObject jsonRespuesta = new JSONObject();
+		
+		//Comprobamos que existen tanto la Asignatura como el Turno
+		if(asignaturas.containsKey(idAsignatura) && turnos.containsKey(idTurno)) {
+			
+			//Creamos el objeto asignatura y turno para poder asignar las variables creadas anteriomente
+			Asignatura asignatura = asignaturas.get(idAsignatura);
+		    Turno turno = turnos.get(idTurno);
+		    
+			//Asignamos la asignatura al turno
+			asignatura.setTurno(turno);
+			turno.addAsignatura(asignatura, idAsignatura);
+			
+			jsonRespuesta.put("idAsignatura", asignatura.getIdAsignatura());
+			jsonRespuesta.put("nombreAsignatura", asignatura.getNombreAsignatura());
+			jsonRespuesta.put("idTurno", turno.getIdTurno());
+			jsonRespuesta.put("nombreTurno", turno.getNombreTurno());
+			
+			return Response.status(200).entity(jsonRespuesta.toString()).build();
+		}
+		
+		//Si no existe un turno o una asignatura con ese id, nos devuelve null
+		return null;
+	}
+	
 }

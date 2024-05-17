@@ -219,6 +219,34 @@
 			});
 		});
 		
+		//Asignar Asignatura a Turno
+        $("#asignarButton").click(function(){
+        	
+        	var sendInfo = {idTurno: $('#idTurno').val(), nombreTurno: $('#nombreTurno').val()};
+        	var sendInfo = {idAsignatura: $('#idAsignatura').val(), nombreAsignatura: $('#nombreAsignatura').val()};
+        	
+            $.ajax({
+                url: 'rest/services/asignar/',
+                headers: { 
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json' 
+                },
+                type: 'POST',
+                dataType: "json", 
+                success: function(result) {
+                	if(result) {
+			    		document.getElementById(result.idTurno).outerHTML = "";
+			    		loadAsignatura(result.idAsignatura, result.nombreAsignatura);
+			    		loadTurno(result.idTurno, result.nombreTurno);
+			    	}
+                },
+                error: function(jqXhr, textStatus, errorMessage){
+                    alert('Error al asignar la asignatura al turno.');
+                },
+                data:  JSON.stringify(sendInfo)
+            });
+        });
+
 </script>
 	
 	
@@ -247,9 +275,16 @@
 	
 	<br>
 	<br>
-	Listado de asignaturas creadas
+	Listado de turnos creados
 	<br>
 	<ul id="listadoTurnos"></ul>
+<br>
+    Asignar Asignatura a Turno<br>
+    ID Asignatura:<input type=text id="idAsignatura"><br>
+    Nombre Asignatura:<input type=text id="nombreAsignatura"><br>
+    ID Turno:<input type=text id="idTurno"><br>
+    Nombre Turno:<input type=text id="nombreTurno"><br>
+   	<button id="asignarButton" id="asignarButton">Asignar</button>
 
 </body>
 </html>
