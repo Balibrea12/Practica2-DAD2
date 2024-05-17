@@ -80,11 +80,17 @@ public class RestService {
 		for (Turno turno : turnos.values()) {
 			for (Asignatura asignatura : asignaturas.values()) {
 				
+				JSONObject jsonTurno = new JSONObject();
 				JSONObject jsonAsignatura = new JSONObject();
+				
+				jsonAsignatura.put("idTurno", turno.getIdTurno());
+				jsonAsignatura.put("nombreTurno", turno.getNombreTurno());
+				
 				jsonAsignatura.put("idAsignatura", asignatura.getIdAsignatura());
 				jsonAsignatura.put("nombreAsignatura", asignatura.getNombreAsignatura());
 				
 				jsonRespuesta.append("asignaturas", jsonAsignatura);
+				jsonRespuesta.append("turnos", jsonTurno);
 			}
 		}
 		
@@ -179,7 +185,7 @@ public class RestService {
 		return null;
 	}
 	
-	//Asignación de Asignatura a Turno
+	//POST AsignaturaAddTurno
 	@POST
 	@Path("/asignar/")
 	@Consumes(MediaType.APPLICATION_JSON)
