@@ -219,6 +219,41 @@
 			});
 		});
 		
+		//load AsignaturaAddTurno
+		function loadAsignaturaAddTurno(idTurno, nombreTurno, idAsignatura, nombreAsignatura) {
+        
+			var entry = document.createElement('li');
+			
+			var a = document.createElement('button');
+			
+			var linkText = document.createTextNode(" [Borrar]");
+			
+			a.appendChild(linkText);
+			
+			a.onclick = function () {
+				$.ajax({
+				    url: 'rest/services/asignatura/' + idAsignatura,
+				    type: 'DELETE',
+				    dataType: "json",
+				    success: function(result) {
+				    	document.getElementById(idAsignatura).outerHTML = "";
+				    },
+			    	error: function(jqXhr, textStatus, errorMessage){
+				    	alert('error');	
+				    }
+				});
+			};
+	
+			entry.id = idTurno;
+            
+			entry.appendChild(document.createTextNode("("+ nombreTurno + ") " + nombreAsignatura));
+			
+			entry.appendChild(a);
+			
+			$('#listadoAsignaturaAddTurno').append(entry);
+			
+		}
+		
 		//Asignar Asignatura a Turno
         $("#asignarButton").click(function(){
         	
@@ -285,6 +320,11 @@
     ID Turno:<input type=text id="idTurno"><br>
     Nombre Turno:<input type=text id="nombreTurno"><br>
    	<button id="asignarButton" id="asignarButton">Asignar</button>
-
+	
+	<br>
+	<br>
+	Listado de asignaturas asignadas
+	<br>
+	<ul id="listadoAsignaturaAddTurno"></ul>
 </body>
 </html>
