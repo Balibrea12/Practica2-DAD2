@@ -2,12 +2,13 @@
 <html>
 <head>
 	<meta charset="ISO-8859-1">
-	<title>Probar API REST</title>
+	<title>API REST UCAM</title>
 	<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
 	
 	<script type="text/javascript">
 	
-		function load(idAsignatura, nombreAsignatura){
+		//loadAsignatura
+		function loadAsignatura(idAsignatura, nombreAsignatura){
         
 			var entry = document.createElement('li');
 			
@@ -41,14 +42,15 @@
 			
 		}
 	
+		//Insertar Asignatura
 		$(document).ready(function(){
         
-			$("#sendButton").click(function(){
+			$("#sendButtonAsignatura").click(function(){
             
 				var sendInfo = {idAsignatura: $('#idAsignatura').val(), nombreAsignatura: $('#nombreAsignatura').val()};
 				
 			    $.ajax({
-					    url: 'rest/services/asignatura',
+					    url: 'rest/services/asignatura/',
 					    headers: { 
 				               'Accept': 'application/json',
 				               'Content-Type': 'application/json' 
@@ -57,7 +59,7 @@
 					    dataType: "json", 
 					    success: function(result) {
 					    	if(result)
-					    		load(result.idAsignatura, result.nombreAsignatura);
+					    		loadAsignatura(result.idAsignatura, result.nombreAsignatura);
 					    	else
 					    		alert("Ya existe una asignatura con ese id");
 					    },
@@ -69,12 +71,13 @@
 					});
 			    });
 			
-			$("#updateButton").click(function(){
+			//Update Asignatura
+			$("#updateButtonAsignatura").click(function(){
 	            
 				var sendInfo = {idAsignatura: $('#idAsignatura').val(), nombreAsignatura: $('#nombreAsignatura').val()};
 				
 			    $.ajax({
-					    url: 'rest/services/asignatura',
+					    url: 'rest/services/asignatura/',
 					    headers: { 
 				               'Accept': 'application/json',
 				               'Content-Type': 'application/json' 
@@ -84,7 +87,7 @@
 					    success: function(result) {
 					    	if(result) {
 					    		document.getElementById(result.idAsignatura).outerHTML = "";
-					    		load(result.idAsignatura, result.nombreAsignatura);
+					    		loadAsignatura(result.idAsignatura, result.nombreAsignatura);
 					    	}
 					    	else
 					    		alert("No existe una asignatura con ese id");
@@ -96,37 +99,157 @@
 					    
 					});
 			    });
-		
+			
+			//GET Asignatura
 			$.ajax({
-			    url: 'rest/services/asignatura',
+			    url: 'rest/services/asignatura/',
 			    type: 'GET',
 			    dataType: "json",
 			    success: function(result) {
 			    	jQuery.each(result.asignaturas, function(i, val) {
-			    		  load(val.idAsignatura, val.nombreAsignatura);
+			    		  loadAsignatura(val.idAsignatura, val.nombreAsignatura);
 			    		});
 			    }
 			});
 		});
+		
+		//loadTurno
+		function loadTurno(idTurno, nombreTurno){
+	        
+			var entry = document.createElement('li');
+			
+			var a = document.createElement('button');
+			
+			var linkText = document.createTextNode(" [Borrar]");
+			
+			a.appendChild(linkText);
+			
+			a.onclick = function () {
+				$.ajax({
+				    url: 'rest/services/turno/' + idTurno,
+				    type: 'DELETE',
+				    dataType: "json",
+				    success: function(result) {
+				    	document.getElementById(idTurno).outerHTML = "";
+				    },
+			    	error: function(jqXhr, textStatus, errorMessage){
+				    	alert('error');	
+				    }
+				});
+			};
+	
+			entry.id = idTurno;
+            
+			entry.appendChild(document.createTextNode("("+ idTurno + ") " + nombreTurno));
+			
+			entry.appendChild(a);
+			
+			$('#listadoTurnos').append(entry);
+			
+		}
+		
+		//Insertar Turno
+		$(document).ready(function(){
+	        
+			$("#sendButtonTurno").click(function(){
+            
+				var sendInfo = {idTurno: $('#idTurno').val(), nombreTurno: $('#nombreTurno').val()};
+				
+			    $.ajax({
+					    url: 'rest/services/turno/',
+					    headers: { 
+				               'Accept': 'application/json',
+				               'Content-Type': 'application/json' 
+				           },
+					    type: 'POST',
+					    dataType: "json", 
+					    success: function(result) {
+					    	if(result)
+					    		loadTurno(result.idTurno, result.nombreTurno);
+					    	else
+					    		alert("Ya existe un turno con ese id");
+					    },
+				    	error: function(jqXhr, textStatus, errorMessage){
+					    	alert('Error: ' + jqXhr.responseJSON.resultado);	
+					    },
+					    data:  JSON.stringify(sendInfo)
+					    
+					});
+			    });
+			
+			//Update Turno
+			$("#updateButtonTurno").click(function(){
+	            
+				var sendInfo = {idTurno: $('#idTurno').val(), nombreTurno: $('#nombreTurno').val()};
+				
+			    $.ajax({
+					    url: 'rest/services/turno/',
+					    headers: { 
+				               'Accept': 'application/json',
+				               'Content-Type': 'application/json' 
+				           },
+					    type: 'PUT',
+					    dataType: "json", 
+					    success: function(result) {
+					    	if(result) {
+					    		document.getElementById(result.idTurno).outerHTML = "";
+					    		loadTurno(result.idTurno, result.nombreTurno);
+					    	}
+					    	else
+					    		alert("No existe un turno con ese id");
+					    },
+				    	error: function(jqXhr, textStatus, errorMessage){
+					    	alert('Error: ' + jqXhr.responseJSON.resultado);	
+					    },
+					    data:  JSON.stringify(sendInfo)
+					    
+					});
+			    });
+			
+			//GET Turno
+			$.ajax({
+			    url: 'rest/services/turno/',
+			    type: 'GET',
+			    dataType: "json",
+			    success: function(result) {
+			    	jQuery.each(result.turnos, function(i, val) {
+			    		  loadTurno(val.idTurno, val.nombreTurno);
+			    		});
+			    }
+			});
+		});
+		
 </script>
 	
 	
 </head>
 <body>
 
-	<center><b>Ejemplo API Rest</b></center>
+	<center><b>GESTIÓN DE EXÁMENES UCAM</b></center>
 <br>
-	Formulario para insertar<br>
+	Formulario para insertar un Asignatura<br>
 	ID Asignatura:<input type=text id="idAsignatura"><br>
 	Nombre Asignatura:<input type=text id="nombreAsignatura"><br>
-	<button id="sendButton">Crear Asignatura</button>
-	<button id="updateButton">Modificar Asignatura</button>
+	<button id="sendButtonAsignatura">Crear Asignatura</button>
+	<button id="updateButtonAsignatura">Modificar Asignatura</button>
 	
 	<br>
 	<br>
 	Listado de asignaturas creadas
 	<br>
 	<ul id="listadoAsignaturas"></ul>
+<br>
+	Formulario para insertar un Turno<br>
+	ID Turno:<input type=text id="idTurno"><br>
+	Nombre Turno:<input type=text id="nombreTurno"><br>
+	<button id="sendButtonTurno">Crear Turno</button>
+	<button id="updateButtonTurno">Modificar Turno</button>
+	
+	<br>
+	<br>
+	Listado de asignaturas creadas
+	<br>
+	<ul id="listadoTurnos"></ul>
 
 </body>
 </html>
