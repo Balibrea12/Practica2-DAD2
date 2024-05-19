@@ -11,6 +11,7 @@ public class Turno {
 	public Turno(String idTurno, String nombreTurno) {
 		this.idTurno = idTurno;
 		this.nombreTurno = nombreTurno;
+		this.asignaturas = new Hashtable<>();
 	}
 
 	public String getIdTurno() {

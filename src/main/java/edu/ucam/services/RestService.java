@@ -73,28 +73,23 @@ public class RestService {
 	@Path("/asignar/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAsignaturaAddTurno() {
-		
-		System.out.println("Ejecutando getAsignaturaAddTurno");
-		JSONObject jsonRespuesta = new JSONObject();
-		
-		for (Turno turno : turnos.values()) {
-			for (Asignatura asignatura : asignaturas.values()) {
-				
-				JSONObject jsonTurno = new JSONObject();
-				JSONObject jsonAsignatura = new JSONObject();
-				
-				jsonAsignatura.put("idTurno", turno.getIdTurno());
-				jsonAsignatura.put("nombreTurno", turno.getNombreTurno());
-				
-				jsonAsignatura.put("idAsignatura", asignatura.getIdAsignatura());
-				jsonAsignatura.put("nombreAsignatura", asignatura.getNombreAsignatura());
-				
-				jsonRespuesta.append("asignaturas", jsonAsignatura);
-				jsonRespuesta.append("turnos", jsonTurno);
-			}
-		}
-		
-		return Response.status(200).entity(jsonRespuesta.toString()).build();
+	    System.out.println("Ejecutando getAsignaturaAddTurno");
+	    JSONObject jsonRespuesta = new JSONObject();
+
+	    for (Turno turno : turnos.values()) {
+	        JSONObject jsonTurno = new JSONObject();
+	        jsonTurno.put("idTurno", turno.getIdTurno());
+	        jsonTurno.put("nombreTurno", turno.getNombreTurno());
+
+	        for (Asignatura asignatura : turno.getAsignaturas().values()) {
+	            JSONObject jsonAsignatura = new JSONObject();
+	            jsonAsignatura.put("idAsignatura", asignatura.getIdAsignatura());
+	            jsonAsignatura.put("nombreAsignatura", asignatura.getNombreAsignatura());
+	            jsonTurno.append("asignaturas", jsonAsignatura);
+	        }
+	        jsonRespuesta.append("turnos", jsonTurno);
+	    }
+	    return Response.status(200).entity(jsonRespuesta.toString()).build();
 	}
 	
 	//POST Asignatura
@@ -191,51 +186,62 @@ public class RestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response postAsignaturaAddTurno(InputStream incomingData) {
-		
-		StringBuilder sb = new StringBuilder();
-		System.out.println("Ejecutando postAsignaturaAddTurno");
-		
-		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(incomingData));
-			String line = null;
-			
-			while ((line = in.readLine()) != null) {
-				sb.append(line);
-			}
-			
-		} catch (Exception e) {
-			System.out.println("Error Parsing: - ");
-		}
+	    StringBuilder sb = new StringBuilder();
+	    System.out.println("Ejecutando postAsignaturaAddTurno");
 
-		JSONObject jsonRecibido = new JSONObject(sb.toString());
-		
-		//Creamos variables de idAsignatura e idTurno
-		String idAsignatura = jsonRecibido.getString("idAsignatura");
+	    try {
+	        BufferedReader in = new BufferedReader(new InputStreamReader(incomingData));
+	        String line;
+	        while ((line = in.readLine()) != null) {
+	            sb.append(line);
+	        }
+	    } catch (Exception e) {
+	        System.out.println("Error Parsing: - ");
+	    }
+
+	    JSONObject jsonRecibido = new JSONObject(sb.toString());
+
+	    String idAsignatura = jsonRecibido.getString("idAsignatura");
 	    String idTurno = jsonRecibido.getString("idTurno");
+
+	    JSONObject jsonRespuesta = new JSONObject();
+
+	    if (asignaturas.containsKey(idAsignatura) && turnos.containsKey(idTurno)) {
+	        Asignatura asignatura = asignaturas.get(idAsignatura);
+	        Turno turno = turnos.get(idTurno);
+
+	        asignatura.setTurno(turno);
+	        turno.addAsignatura(asignatura, idAsignatura);
+
+	        jsonRespuesta.put("idAsignatura", asignatura.getIdAsignatura());
+	        jsonRespuesta.put("nombreAsignatura", asignatura.getNombreAsignatura());
+	        jsonRespuesta.put("idTurno", turno.getIdTurno());
+	        jsonRespuesta.put("nombreTurno", turno.getNombreTurno());
+
+	        return Response.status(200).entity(jsonRespuesta.toString()).build();
+	    }
+
+	    return null;
+	}
+	
+	//DELETE Turno
+	@DELETE
+	@Path("/turno/{idTurno}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteTurno(@PathParam("idTurno") String idTurno) {
 		
-		//Creamos el jsonRespuesta
+		System.out.println("Ejecutando deleteTurno");
 		JSONObject jsonRespuesta = new JSONObject();
 		
-		//Comprobamos que existen tanto la Asignatura como el Turno
-		if(asignaturas.containsKey(idAsignatura) && turnos.containsKey(idTurno)) {
+		if(turnos.containsKey(idTurno)) {
 			
-			//Creamos el objeto asignatura y turno para poder asignar las variables creadas anteriomente
-			Asignatura asignatura = asignaturas.get(idAsignatura);
-		    Turno turno = turnos.get(idTurno);
-		    
-			//Asignamos la asignatura al turno
-			asignatura.setTurno(turno);
-			turno.addAsignatura(asignatura, idAsignatura);
+			turnos.remove(idTurno);
+			jsonRespuesta.append("resultado", "Borrado");
 			
-			jsonRespuesta.put("idAsignatura", asignatura.getIdAsignatura());
-			jsonRespuesta.put("nombreAsignatura", asignatura.getNombreAsignatura());
-			jsonRespuesta.put("idTurno", turno.getIdTurno());
-			jsonRespuesta.put("nombreTurno", turno.getNombreTurno());
-			
-			return Response.status(200).entity(jsonRespuesta.toString()).build();
+			return Response.ok().entity(jsonRespuesta.toString()).build();
 		}
 		
-		//Si no existe un turno o una asignatura con ese id, nos devuelve null
+		//Si no existe el turno con ese id no se borraría
 		return null;
 	}
 	
@@ -257,27 +263,6 @@ public class RestService {
 		}
 		
 		//Si no existe la asignatura con ese id no se borraría
-		return null;
-	}
-	
-	//DELETE Turno
-	@DELETE
-	@Path("/turno/{idTurno}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteTurno(@PathParam("idTurno") String idTurno) {
-		
-		System.out.println("Ejecutando deleteTurno");
-		JSONObject jsonRespuesta = new JSONObject();
-		
-		if(turnos.containsKey(idTurno)) {
-			
-			turnos.remove(idTurno);
-			jsonRespuesta.append("resultado", "Borrado");
-			
-			return Response.ok().entity(jsonRespuesta.toString()).build();
-		}
-		
-		//Si no existe el turno con ese id no se borraría
 		return null;
 	}
 	
