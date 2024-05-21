@@ -6,18 +6,12 @@
 	<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
 	
 	<script type="text/javascript">
-	
 		//loadAsignatura
 		function loadAsignatura(idAsignatura, nombreAsignatura){
-        
 			var entry = document.createElement('li');
-			
 			var a = document.createElement('button');
-			
 			var linkText = document.createTextNode(" [Borrar]");
-			
 			a.appendChild(linkText);
-			
 			a.onclick = function () {
 				$.ajax({
 				    url: 'rest/services/asignatura/' + idAsignatura,
@@ -31,24 +25,16 @@
 				    }
 				});
 			};
-	
 			entry.id = idAsignatura;
-            
 			entry.appendChild(document.createTextNode("("+ idAsignatura + ") " + nombreAsignatura));
-			
 			entry.appendChild(a);
-			
 			$('#listadoAsignaturas').append(entry);
-			
 		}
 	
 		//Insertar Asignatura
 		$(document).ready(function(){
-        
 			$("#sendButtonAsignatura").click(function(){
-            
 				var sendInfo = {idAsignatura: $('#idAsignatura').val(), nombreAsignatura: $('#nombreAsignatura').val()};
-				
 			    $.ajax({
 					    url: 'rest/services/asignatura/',
 					    headers: { 
@@ -67,15 +53,12 @@
 					    	alert('Error: ' + jqXhr.responseJSON.resultado);	
 					    },
 					    data:  JSON.stringify(sendInfo)
-					    
 					});
 			    });
 			
 			//Update Asignatura
 			$("#updateButtonAsignatura").click(function(){
-	            
 				var sendInfo = {idAsignatura: $('#idAsignatura').val(), nombreAsignatura: $('#nombreAsignatura').val()};
-				
 			    $.ajax({
 					    url: 'rest/services/asignatura/',
 					    headers: { 
@@ -96,7 +79,6 @@
 					    	alert('Error: ' + jqXhr.responseJSON.resultado);	
 					    },
 					    data:  JSON.stringify(sendInfo)
-					    
 					});
 			    });
 			
@@ -115,15 +97,10 @@
 		
 		//loadTurno
 		function loadTurno(idTurno, nombreTurno){
-	        
 			var entry = document.createElement('li');
-			
 			var a = document.createElement('button');
-			
 			var linkText = document.createTextNode(" [Borrar]");
-			
 			a.appendChild(linkText);
-			
 			a.onclick = function () {
 				$.ajax({
 				    url: 'rest/services/turno/' + idTurno,
@@ -137,24 +114,16 @@
 				    }
 				});
 			};
-	
 			entry.id = idTurno;
-            
 			entry.appendChild(document.createTextNode("("+ idTurno + ") " + nombreTurno));
-			
 			entry.appendChild(a);
-			
 			$('#listadoTurnos').append(entry);
-			
 		}
 		
 		//Insertar Turno
 		$(document).ready(function(){
-	        
 			$("#sendButtonTurno").click(function(){
-            
 				var sendInfo = {idTurno: $('#idTurno').val(), nombreTurno: $('#nombreTurno').val()};
-				
 			    $.ajax({
 					    url: 'rest/services/turno/',
 					    headers: { 
@@ -173,15 +142,12 @@
 					    	alert('Error: ' + jqXhr.responseJSON.resultado);	
 					    },
 					    data:  JSON.stringify(sendInfo)
-					    
 					});
 			    });
 			
 			//Update Turno
 			$("#updateButtonTurno").click(function(){
-	            
 				var sendInfo = {idTurno: $('#idTurno').val(), nombreTurno: $('#nombreTurno').val()};
-				
 			    $.ajax({
 					    url: 'rest/services/turno/',
 					    headers: { 
@@ -202,7 +168,6 @@
 					    	alert('Error: ' + jqXhr.responseJSON.resultado);	
 					    },
 					    data:  JSON.stringify(sendInfo)
-					    
 					});
 			    });
 			
@@ -219,112 +184,85 @@
 			});
 		});
 		
-		//load AsignaturaAddTurno
-		function loadAsignaturaAddTurno(idTurno, nombreTurno, idAsignatura, nombreAsignatura) {
-        
+		//loadAsignaturaAddTurno
+		function loadAsignaturaAddTurno(idTurno, nombreTurno, idAsignatura, nombreAsignatura){
 			var entry = document.createElement('li');
-			
-			var a = document.createElement('button');
-			
-			var linkText = document.createTextNode(" [Borrar]");
-			
-			a.appendChild(linkText);
-			
-			a.onclick = function () {
-				$.ajax({
-				    url: 'rest/services/asignatura/' + idAsignatura,
-				    type: 'DELETE',
-				    dataType: "json",
-				    success: function(result) {
-				    	document.getElementById(idAsignatura).outerHTML = "";
-				    },
-			    	error: function(jqXhr, textStatus, errorMessage){
-				    	alert('error');	
-				    }
-				});
-			};
-	
-			entry.id = idTurno;
-            
-			entry.appendChild(document.createTextNode("("+ nombreTurno + ") " + nombreAsignatura));
-			
-			entry.appendChild(a);
-			
-			$('#listadoAsignaturaAddTurno').append(entry);
-			
+			entry.id = idAsignatura;
+			entry.appendChild(document.createTextNode("("+ idTurno + ") " + nombreTurno + " - ("+ idAsignatura + ") " + nombreAsignatura));
+			$('#listadoAsignaturasTurnos').append(entry);
 		}
 		
 		//Asignar Asignatura a Turno
-        $("#asignarButton").click(function(){
-        	
-        	var sendInfo = {idTurno: $('#idTurno').val(), nombreTurno: $('#nombreTurno').val()};
-        	var sendInfo = {idAsignatura: $('#idAsignatura').val(), nombreAsignatura: $('#nombreAsignatura').val()};
-        	
-            $.ajax({
-                url: 'rest/services/asignar/',
-                headers: { 
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json' 
-                },
-                type: 'POST',
-                dataType: "json", 
-                success: function(result) {
-                	if(result) {
-			    		document.getElementById(result.idTurno).outerHTML = "";
-			    		loadAsignatura(result.idAsignatura, result.nombreAsignatura);
-			    		loadTurno(result.idTurno, result.nombreTurno);
-			    	}
-                },
-                error: function(jqXhr, textStatus, errorMessage){
-                    alert('Error al asignar la asignatura al turno.');
-                },
-                data:  JSON.stringify(sendInfo)
-            });
-        });
-
-</script>
-	
-	
+		$(document).ready(function(){
+			$("#asignarButton").click(function(){
+				var sendInfo = {
+					idTurno: $('#idTurnoAsignar').val(),
+					idAsignatura: $('#idAsignaturaAsignar').val()
+				};
+			    $.ajax({
+					    url: 'rest/services/asignar/',
+					    headers: { 
+				               'Accept': 'application/json',
+				               'Content-Type': 'application/json' 
+				           },
+					    type: 'POST',
+					    dataType: "json", 
+					    success: function(result) {
+					    	if(result)
+					    		loadAsignaturaAddTurno(result.idTurno, result.nombreTurno, result.idAsignatura, result.nombreAsignatura);
+					    	else
+					    		alert("Error al asignar la asignatura al turno.");
+					    },
+				    	error: function(jqXhr, textStatus, errorMessage){
+					    	alert('Error al asignar la asignatura al turno.');
+					    },
+					    data:  JSON.stringify(sendInfo)
+					});
+			    });
+			
+			//GET AsignaturaAddTurno
+			$.ajax({
+			    url: 'rest/services/asignar/',
+			    type: 'GET',
+			    dataType: "json",
+			    success: function(result) {
+			    	jQuery.each(result.asignaturas, function(i, val) {
+			    		  loadAsignaturaAddTurno(val.idTurno, val.nombreTurno, val.idAsignatura, val.nombreAsignatura);
+			    		});
+			    }
+			});
+		});
+	</script>
 </head>
 <body>
-
-	<center><b>GESTIÓN DE EXÁMENES UCAM</b></center>
-<br>
-	Formulario para insertar un Asignatura<br>
-	ID Asignatura:<input type=text id="idAsignatura"><br>
-	Nombre Asignatura:<input type=text id="nombreAsignatura"><br>
-	<button id="sendButtonAsignatura">Crear Asignatura</button>
-	<button id="updateButtonAsignatura">Modificar Asignatura</button>
+	<h1>API REST UCAM</h1>
+	<h2>Insertar asignatura</h2>
+	<form>
+		ID Asignatura: <input type="text" id="idAsignatura"><br>
+		Nombre Asignatura: <input type="text" id="nombreAsignatura"><br>
+		<button type="button" id="sendButtonAsignatura">Insertar</button>
+		<button type="button" id="updateButtonAsignatura">Actualizar</button>
+	</form>
+	<ul id="listadoAsignaturas">
+	</ul>
 	
-	<br>
-	<br>
-	Listado de asignaturas creadas
-	<br>
-	<ul id="listadoAsignaturas"></ul>
-<br>
-	Formulario para insertar un Turno<br>
-	ID Turno:<input type=text id="idTurno"><br>
-	Nombre Turno:<input type=text id="nombreTurno"><br>
-	<button id="sendButtonTurno">Crear Turno</button>
-	<button id="updateButtonTurno">Modificar Turno</button>
+	<h2>Insertar turno</h2>
+	<form>
+		ID Turno: <input type="text" id="idTurno"><br>
+		Nombre Turno: <input type="text" id="nombreTurno"><br>
+		<button type="button" id="sendButtonTurno">Insertar</button>
+		<button type="button" id="updateButtonTurno">Actualizar</button>
+	</form>
+	<ul id="listadoTurnos">
+	</ul>
 	
-	<br>
-	<br>
-	Listado de turnos creados
-	<br>
-	<ul id="listadoTurnos"></ul>
-<br>
-    Asignar Asignatura a Turno<br>
-    ID Asignatura:<input type=text id="idAsignatura"><br>
-    Nombre Asignatura:<input type=text id="nombreAsignatura"><br>
-    ID Turno:<input type=text id="idTurno"><br>
-    Nombre Turno:<input type=text id="nombreTurno"><br>
-   	<button id="asignarButton" id="asignarButton">Asignar</button>
-	
-	<br>
-	<br>
-	Listado de asignaturas asignadas
-	<br>
-	<ul id="listadoAsignaturaAddTurno"></ul>
+	<h2>Asignar asignatura a turno</h2>
+	<form>
+		ID Turno: <input type="text" id="idTurnoAsignar"><br>
+		ID Asignatura: <input type="text" id="idAsignaturaAsignar"><br>
+		<button type="button" id="asignarButton">Asignar</button>
+	</form>
+	<ul id="listadoAsignaturasTurnos">
+	</ul>
 </body>
 </html>
