@@ -4,13 +4,84 @@
 	<meta charset="ISO-8859-1">
 	<title>API REST UCAM</title>
 	<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
-	
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 20px;
+			background-color: #f4f4f4;
+		}
+
+		h1, h2 {
+			color: #333;
+			text-align: center;
+		}
+		
+		form {
+			background: #fff;
+			padding: 20px;
+			margin-bottom: 20px;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		form input[type="text"] {
+			width: calc(100% - 22px);
+			padding: 10px;
+			margin: 5px 0 10px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+		}
+
+		form button {
+			padding: 10px 15px;
+			margin-right: 10px;
+			background-color: #007bff;
+			color: #fff;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+		form button:hover {
+			background-color: #0056b3;
+		}
+
+		ul {
+			list-style: none;
+			padding: 0;
+		}
+
+		ul li {
+			background: #fff;
+			padding: 10px;
+			margin-bottom: 5px;
+			border-radius: 4px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+		}
+
+		ul li button {
+			padding: 5px 10px;
+			background-color: #dc3545;
+			color: #fff;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+		ul li button:hover {
+			background-color: #c82333;
+		}
+	</style>
 	<script type="text/javascript">
 		//loadAsignatura
 		function loadAsignatura(idAsignatura, nombreAsignatura){
 			var entry = document.createElement('li');
 			var a = document.createElement('button');
-			var linkText = document.createTextNode(" [Borrar]");
+			var linkText = document.createTextNode("Borrar");
 			a.appendChild(linkText);
 			a.onclick = function () {
 				$.ajax({
@@ -30,7 +101,7 @@
 			entry.appendChild(a);
 			$('#listadoAsignaturas').append(entry);
 		}
-	
+
 		//Insertar Asignatura
 		$(document).ready(function(){
 			$("#sendButtonAsignatura").click(function(){
@@ -99,7 +170,7 @@
 		function loadTurno(idTurno, nombreTurno){
 			var entry = document.createElement('li');
 			var a = document.createElement('button');
-			var linkText = document.createTextNode(" [Borrar]");
+			var linkText = document.createTextNode("Borrar");
 			a.appendChild(linkText);
 			a.onclick = function () {
 				$.ajax({
@@ -119,7 +190,7 @@
 			entry.appendChild(a);
 			$('#listadoTurnos').append(entry);
 		}
-		
+
 		//Insertar Turno
 		$(document).ready(function(){
 			$("#sendButtonTurno").click(function(){
@@ -238,31 +309,34 @@
 	<h1>API REST UCAM</h1>
 	<h2>Insertar asignatura</h2>
 	<form>
-		ID Asignatura: <input type="text" id="idAsignatura"><br>
-		Nombre Asignatura: <input type="text" id="nombreAsignatura"><br>
+		<label for="idAsignatura">ID Asignatura:</label>
+		<input type="text" id="idAsignatura"><br>
+		<label for="nombreAsignatura">Nombre Asignatura:</label>
+		<input type="text" id="nombreAsignatura"><br>
 		<button type="button" id="sendButtonAsignatura">Insertar</button>
 		<button type="button" id="updateButtonAsignatura">Actualizar</button>
 	</form>
-	<ul id="listadoAsignaturas">
-	</ul>
+	<ul id="listadoAsignaturas"></ul>
 	
 	<h2>Insertar turno</h2>
 	<form>
-		ID Turno: <input type="text" id="idTurno"><br>
-		Nombre Turno: <input type="text" id="nombreTurno"><br>
+		<label for="idTurno">ID Turno:</label>
+		<input type="text" id="idTurno"><br>
+		<label for="nombreTurno">Nombre Turno:</label>
+		<input type="text" id="nombreTurno"><br>
 		<button type="button" id="sendButtonTurno">Insertar</button>
 		<button type="button" id="updateButtonTurno">Actualizar</button>
 	</form>
-	<ul id="listadoTurnos">
-	</ul>
+	<ul id="listadoTurnos"></ul>
 	
 	<h2>Asignar asignatura a turno</h2>
 	<form>
-		ID Turno: <input type="text" id="idTurnoAsignar"><br>
-		ID Asignatura: <input type="text" id="idAsignaturaAsignar"><br>
+		<label for="idTurnoAsignar">ID Turno:</label>
+		<input type="text" id="idTurnoAsignar"><br>
+		<label for="idAsignaturaAsignar">ID Asignatura:</label>
+		<input type="text" id="idAsignaturaAsignar"><br>
 		<button type="button" id="asignarButton">Asignar</button>
 	</form>
-	<ul id="listadoAsignaturasTurnos">
-	</ul>
+	<ul id="listadoAsignaturasTurnos"></ul>
 </body>
 </html>
